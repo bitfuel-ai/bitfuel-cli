@@ -1,10 +1,11 @@
 [package]
 name = "bashfull"
-version = "0.1.0"
+version = "0.1.2"
 edition = "2021"
+description = "never forget a bash command again"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-clap = "3.0.0-beta.1"
-rand = "0.7.3"
+structopt = { version = "0.3", default-features = false }
