@@ -1,4 +1,10 @@
 use structopt::StructOpt;
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize, Debug)]
+struct APIResponse {
+    name: String,
+}
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "bashfull", about = "never forget a bash command again")]
@@ -21,58 +27,68 @@ enum Bashfull {
     },
 }
 
-// async fn save(descript:String, command:String) -> Result<() >> {
-//     let client = reqwest::Client::new();
-//     let resp = client.get("http://api.roboflow.com")
-//     .send()
-//     .await?;
+async fn save(descript:String, command:String) -> Result<(), Box<dyn std::error::Error>> {
+    let client = reqwest::Client::new();
+    let response = client
+        .get("https://bashfull-server.vercel.app/api/test")
+        .send().await?;
+    //println!("Success! {:?}", response);
 
-//     dbg! resp
+    match response.status() {
+        reqwest::StatusCode::OK => {
+            // on success, parse our JSON to an APIResponse
+            match response.json::<APIResponse>().await {
+                Ok(parsed) => println!("Success! {:?}", parsed),
+                Err(_) => println!("Hm, the response didn't match the shape we expected."),
+            };
+        }
+        reqwest::StatusCode::UNAUTHORIZED => {
+            println!("Need to grab a new token");
+        }
+        other => {
+            panic!("Uh oh! Something unexpected happened: {:?}", other);
+        }
+    };
 
-//     println!("saving : {}", descript);
+    Ok(())
+}
 
-//     if resp.status() != 200 {
-//         println!("failed to submit note");
-//         return Ok(());
-//     }
+async fn query(descript:String) -> Result<(), Box<dyn std::error::Error>> {
+    let client = reqwest::Client::new();
+    let response = client
+        .get("https://bashfull-server.vercel.app/api/test")
+        .send().await?;
+    //println!("Success! {:?}", response);
 
-//     Ok(())
-// }
+    match response.status() {
+        reqwest::StatusCode::OK => {
+            // on success, parse our JSON to an APIResponse
+            match response.json::<APIResponse>().await {
+                Ok(parsed) => println!("Success! {:?}", parsed),
+                Err(_) => println!("Hm, the response didn't match the shape we expected."),
+            };
+        }
+        reqwest::StatusCode::UNAUTHORIZED => {
+            println!("Need to grab a new token");
+        }
+        other => {
+            panic!("Uh oh! Something unexpected happened: {:?}", other);
+        }
+    };
 
-// async fn query(descript:String) {
-//     println!("querying : {}", descript);
-// }
+    Ok(())
+}
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    
-    let client = reqwest::Client::new();
-    let resp = client.get("https://bashfull-server.vercel.app/api/test")
-        .send()
-        .await?.text().await;
-
-    // if resp.status() != 200 {
-    //     println!("failed to submit note");
-    //     return Ok(());
-    // }
-
-
-    println!("{:?}", resp);
+    match Bashfull::from_args() {
+        Bashfull::Save {descript, command} => {
+            save(descript, command).await;
+        },
+        Bashfull::Query {descript} => {
+            query(descript).await;
+        },
+    }   
 
     Ok(())
 }    
-
-
-// #[tokio::main]
-// fn main() {
-//     match Bashfull::from_args() {
-//         Bashfull::Save {descript, command} => {
-//             save(descript, command);
-//         },
-//         Bashfull::Query {descript} => {
-//             query(descript);
-//         }
-//         _ => (),
-//     }
-//     //println!("{:?}", opt.Save);
-// }

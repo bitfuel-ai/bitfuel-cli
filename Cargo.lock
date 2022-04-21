@@ -25,6 +25,8 @@ name = "bashfull"
 version = "0.1.2"
 dependencies = [
  "reqwest",
+ "serde",
+ "serde_json",
  "structopt",
  "tokio",
 ]
