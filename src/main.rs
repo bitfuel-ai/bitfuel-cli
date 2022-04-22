@@ -11,8 +11,8 @@ struct APIResponse {
 enum Bashfull {
     /// Activate debug mode
     // short and long flags (-d, --debug) will be deduced from the field's name
-    #[structopt(name = "save")]
-    Save {
+    #[structopt(name = "describe")]
+    Describe {
         #[structopt(short = "d", long = "description")]
         descript: String,
 
@@ -34,7 +34,7 @@ enum Bashfull {
 
 
 
-async fn save(_descript:String, _command:String) -> Result<(), Box<dyn std::error::Error>> {
+async fn describe(_descript:String, _command:String) -> Result<(), Box<dyn std::error::Error>> {
     let client = reqwest::Client::new();
     let response = client
         .get("https://bashfull-server.vercel.app/api/test")
@@ -93,8 +93,8 @@ async fn login() -> Result<(), Box<dyn std::error::Error>> {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     match Bashfull::from_args() {
-        Bashfull::Save {descript, command} => {
-            save(descript, command).await;
+        Bashfull::Describe {descript, command} => {
+            describe(descript, command).await;
         },
         Bashfull::Query {descript} => {
             query(descript).await;
