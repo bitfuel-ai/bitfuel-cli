@@ -25,9 +25,16 @@ enum Bashfull {
         #[structopt(short = "d", long = "description")]
         descript: String,
     },
+    #[structopt(name = "login")]
+    Login {
+        #[structopt(default_value="https://bashfull-server.vercel.app/profile")]
+        url: String
+    }
 }
 
-async fn save(descript:String, command:String) -> Result<(), Box<dyn std::error::Error>> {
+
+
+async fn save(_descript:String, _command:String) -> Result<(), Box<dyn std::error::Error>> {
     let client = reqwest::Client::new();
     let response = client
         .get("https://bashfull-server.vercel.app/api/test")
@@ -53,7 +60,7 @@ async fn save(descript:String, command:String) -> Result<(), Box<dyn std::error:
     Ok(())
 }
 
-async fn query(descript:String) -> Result<(), Box<dyn std::error::Error>> {
+async fn query(_descript:String) -> Result<(), Box<dyn std::error::Error>> {
     let client = reqwest::Client::new();
     let response = client
         .get("https://bashfull-server.vercel.app/api/test")
@@ -76,6 +83,10 @@ async fn query(descript:String) -> Result<(), Box<dyn std::error::Error>> {
         }
     };
 
+    Ok(())
+}
+
+async fn login() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
@@ -87,6 +98,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         },
         Bashfull::Query {descript} => {
             query(descript).await;
+        },
+        Bashfull::Login {url} => {
+            login().await;
         },
     }   
 
