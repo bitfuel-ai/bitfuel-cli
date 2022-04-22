@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use dialoguer::Input;
 use std::fs;
 use std::env;
+use std::path::Path;
 
 
 
@@ -66,7 +67,36 @@ async fn describe(_descript:String, _command:String) -> Result<(), Box<dyn std::
     Ok(())
 }
 
+async fn check_login() -> Result<(), Box<dyn std::error::Error>> {
+    let home = match env::var_os("HOME") {
+        Some(v) => v.into_string().unwrap(),
+        None => panic!("$HOME is not set")
+    };
+
+    let home = home.to_owned();
+    let home_dir = home + "/.bashfull";
+
+    let mut rs:bool=true;
+
+    let api_key_file = home_dir + "/key.txt";
+
+    rs = Path::new(&api_key_file).exists();
+
+    dbg!(rs);
+
+    if rs == false {
+        panic!("Your credentials have not been set up - please login with bashfull login.");
+    } else {
+        Ok(())
+    }
+
+
+}
+
 async fn recall(_descript:String) -> Result<(), Box<dyn std::error::Error>> {
+
+    check_login().await;
+
     let client = reqwest::Client::new();
     let response = client
         .get("https://bashfull-server.vercel.app/api/test")
@@ -103,7 +133,7 @@ async fn login() -> Result<(), Box<dyn std::error::Error>> {
 
     let home = home.to_owned();
     let home_dir = home + "/.bashfull";
-    let home_dir2 = duplicate(home_dir);
+    let home_dir2 = home_dir.clone();
     fs::create_dir_all(home_dir)?;
 
     println!("Please visit bashfull.com/profile and paste your api key here.");
