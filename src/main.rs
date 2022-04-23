@@ -5,9 +5,6 @@ use std::fs;
 use std::env;
 use std::path::Path;
 
-
-
-
 #[derive(Serialize, Deserialize, Debug)]
 struct APIResponse {
     name: String,
@@ -39,12 +36,25 @@ enum Bashfull {
     }
 }
 
-
-
 async fn describe(_descript:String, _command:String) -> Result<(), Box<dyn std::error::Error>> {
+    check_login().await;
+
+    let home = match env::var_os("HOME") {
+        Some(v) => v.into_string().unwrap(),
+        None => panic!("$HOME is not set")
+    };
+
+    let home = home.to_owned();
+    let home_dir = home + "/.bashfull";
+
+    let api_key_file = home_dir + "/key.txt";
+
+    let key = fs::read_to_string(api_key_file)?;
+
+    
     let client = reqwest::Client::new();
     let response = client
-        .get("https://bashfull-server.vercel.app/api/test")
+        .get("https://bashfull-server.vercel.app/api/test".to_owned() + "?api_key=" + &key + "&descript=" + &_descript + "&command=" + &_command)
         .send().await?;
     //println!("Success! {:?}", response);
 
@@ -79,27 +89,37 @@ async fn check_login() -> Result<(), Box<dyn std::error::Error>> {
     let mut rs:bool=true;
 
     let api_key_file = home_dir + "/key.txt";
+    let api_key_file2 = api_key_file.clone();
 
     rs = Path::new(&api_key_file).exists();
-
-    dbg!(rs);
 
     if rs == false {
         panic!("Your credentials have not been set up - please login with bashfull login.");
     } else {
+        
         Ok(())
     }
-
-
 }
 
 async fn recall(_descript:String) -> Result<(), Box<dyn std::error::Error>> {
 
     check_login().await;
 
+    let home = match env::var_os("HOME") {
+        Some(v) => v.into_string().unwrap(),
+        None => panic!("$HOME is not set")
+    };
+
+    let home = home.to_owned();
+    let home_dir = home + "/.bashfull";
+
+    let api_key_file = home_dir + "/key.txt";
+
+    let key = fs::read_to_string(api_key_file)?;
+
     let client = reqwest::Client::new();
     let response = client
-        .get("https://bashfull-server.vercel.app/api/test")
+        .get("https://bashfull-server.vercel.app/api/test".to_owned() + "?api_key=" + &key + "&descript=" + &_descript)
         .send().await?;
     //println!("Success! {:?}", response);
 
@@ -107,7 +127,7 @@ async fn recall(_descript:String) -> Result<(), Box<dyn std::error::Error>> {
         reqwest::StatusCode::OK => {
             // on success, parse our JSON to an APIResponse
             match response.json::<APIResponse>().await {
-                Ok(parsed) => println!("Success! {:?}", parsed),
+                Ok(parsed) => println!("Recalling command {:?}", parsed),
                 Err(_) => println!("Hm, the response didn't match the shape we expected."),
             };
         }
@@ -152,13 +172,13 @@ async fn login() -> Result<(), Box<dyn std::error::Error>> {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     match Bashfull::from_args() {
         Bashfull::Describe {descript, command} => {
-            describe(descript, command).await;
+            let res = describe(descript, command).await;
         },
         Bashfull::Recall {descript} => {
-            recall(descript).await;
+            let res = recall(descript).await;
         },
         Bashfull::Login {url} => {
-            login().await;
+            let res = login().await;
         },
     }   
     Ok(())
