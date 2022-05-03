@@ -4,11 +4,22 @@ use dialoguer::Input;
 use std::fs;
 use std::env;
 use std::path::Path;
+use serde_json;
+use std::collections::HashMap;
+
 
 #[derive(Serialize, Deserialize, Debug)]
 struct APIResponse {
     name: String,
 }
+
+#[derive(Serialize, Deserialize, Debug)]
+struct Req {
+  status: u16,
+  headers: HashMap<String, String>,
+  body: Option<serde_json::Value>
+}
+
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "bashfull", about = "never forget a bash command again")]
@@ -54,25 +65,38 @@ async fn describe(_descript:String, _command:String) -> Result<(), Box<dyn std::
     
     let client = reqwest::Client::new();
     let response = client
-        .get("https://bashfull-server.vercel.app/api/test".to_owned() + "?api_key=" + &key + "&descript=" + &_descript + "&command=" + &_command)
+        .get("https://bashfull-server.vercel.app/api/describe".to_owned() + "?token=" + &key + "&descript=" + &_descript + "&command=" + &_command)
         .send().await?;
     //println!("Success! {:?}", response);
 
-    match response.status() {
-        reqwest::StatusCode::OK => {
-            // on success, parse our JSON to an APIResponse
-            match response.json::<APIResponse>().await {
-                Ok(parsed) => println!("Success! {:?}", parsed),
-                Err(_) => println!("Hm, the response didn't match the shape we expected."),
-            };
-        }
-        reqwest::StatusCode::UNAUTHORIZED => {
-            println!("Request was unauthorized...");
-        }
-        other => {
-            panic!("Uh oh! Something unexpected happened: {:?}", other);
-        }
-    };
+    let mut hm = HashMap::new();
+    for (key, val) in response.headers().into_iter() {
+      hm.insert(key.as_str().to_owned(), val.to_str().ok().unwrap_or("").to_owned());
+    }
+
+    let req = Req {status: response.status().as_u16(), body: response.json().await.ok(), headers: hm};
+    let body = req.body;
+
+    //let req = await response.json();
+
+    //println!("{}", serde_json::to_string(&req).unwrap_or("".to_owned()));
+    println!("{}", serde_json::to_string(&body).unwrap_or("".to_owned()));
+
+    // match response.status() {
+    //     reqwest::StatusCode::OK => {
+    //         // on success, parse our JSON to an APIResponse
+    //         match response.json::<APIResponse>().await {
+    //             Ok(parsed) => println!("Success! {:?}", parsed),
+    //             Err(_) => println!("Hm, the response didn't match the shape we expected."),
+    //         };
+    //     }
+    //     reqwest::StatusCode::UNAUTHORIZED => {
+    //         println!("Request was unauthorized...");
+    //     }
+    //     other => {
+    //         panic!("Uh oh! Something unexpected happened: {:?}", other);
+    //     }
+    // };
 
     Ok(())
 }
@@ -118,26 +142,41 @@ async fn recall(_descript:String) -> Result<(), Box<dyn std::error::Error>> {
     let key = fs::read_to_string(api_key_file)?;
 
     let client = reqwest::Client::new();
-    let response = client
-        .get("https://bashfull-server.vercel.app/api/test".to_owned() + "?api_key=" + &key + "&descript=" + &_descript)
-        .send().await?;
-    //println!("Success! {:?}", response);
 
-    match response.status() {
-        reqwest::StatusCode::OK => {
-            // on success, parse our JSON to an APIResponse
-            match response.json::<APIResponse>().await {
-                Ok(parsed) => println!("Recalling command {:?}", parsed),
-                Err(_) => println!("Hm, the response didn't match the shape we expected."),
-            };
-        }
-        reqwest::StatusCode::UNAUTHORIZED => {
-            println!("Request was unauthorized...");
-        }
-        other => {
-            panic!("Uh oh! Something unexpected happened: {:?}", other);
-        }
-    };
+    let url = "https://bashfull-server.vercel.app/api/recall".to_owned() + "?token=" + &key + "&prompt=" + &_descript;
+    let response = client
+        .get(url)
+        .send().await?;
+    // println!("Success! {:?}", response);
+
+    let mut hm = HashMap::new();
+    for (key, val) in response.headers().into_iter() {
+      hm.insert(key.as_str().to_owned(), val.to_str().ok().unwrap_or("").to_owned());
+    }
+
+    let req = Req {status: response.status().as_u16(), body: response.json().await.ok(), headers: hm};
+    let body = req.body;
+
+    //let req = await response.json();
+
+    //println!("{}", serde_json::to_string(&req).unwrap_or("".to_owned()));
+    println!("{}", serde_json::to_string(&body).unwrap_or("".to_owned()));
+
+    // match req.status {
+    //     req::status::200 => {
+    //         // on success, parse our JSON to an APIResponse
+    //         match response.json::<APIResponse>().await {
+    //             Ok(parsed) => println!("Recalling command {:?}", parsed),
+    //             Err(_) => println!("Hm, the response didn't match the shape we expected."),
+    //         };
+    //     }
+    //     reqwest::StatusCode::UNAUTHORIZED => {
+    //         println!("Request was unauthorized...");
+    //     }
+    //     other => {
+    //         panic!("Uh oh! Something unexpected happened: {:?}", other);
+    //     }
+    // };
 
     Ok(())
 }
