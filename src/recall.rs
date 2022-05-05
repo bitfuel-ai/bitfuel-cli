@@ -46,8 +46,10 @@ pub async fn recall(_descript:String) -> Result<(), Box<dyn std::error::Error>> 
 
     //let req = await response.json();
 
+    println!("{}", &body.as_ref().unwrap()["command"].as_str().unwrap());
+
     //println!("{}", serde_json::to_string(&req).unwrap_or("".to_owned()));
-    println!("{}", serde_json::to_string(&body).unwrap_or("".to_owned()));
+    //println!("{}", serde_json::to_string(&body).unwrap_or("".to_owned()));
 
     // match req.status {
     //     req::status::200 => {
