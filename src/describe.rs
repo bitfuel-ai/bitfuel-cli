@@ -14,7 +14,18 @@ struct Req {
   body: Option<serde_json::Value>
 }
 
-pub async fn describe(_descript:String, _command:String) -> Result<(), Box<dyn std::error::Error>> {
+pub async fn describe() -> Result<(), Box<dyn std::error::Error>> {
+
+    let _command : String = Input::new()
+    .with_prompt("The command to remember")
+    .with_initial_text("")
+    .interact_text()?;
+
+    let _descript : String = Input::new()
+    .with_prompt("A description of the command")
+    .with_initial_text("")
+    .interact_text()?;
+
 
     let home = match env::var_os("HOME") {
         Some(v) => v.into_string().unwrap(),

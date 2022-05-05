@@ -33,12 +33,8 @@ enum Bashfull {
     // short and long flags (-d, --debug) will be deduced from the field's name
     #[structopt(name = "describe")]
     Describe {
-        #[structopt(short = "d", long = "description")]
-        descript: String,
-
-        #[structopt(short = "c", long = "command")]
-        command: String,
-
+        #[structopt(default_value="https://bashfull-server.vercel.app/profile")]
+        url: String
     },
     #[structopt(name = "recall")]
     Recall {
@@ -55,9 +51,9 @@ enum Bashfull {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     match Bashfull::from_args() {
-        Bashfull::Describe {descript, command} => {
+        Bashfull::Describe {url} => {
             check_login::check_login().await;
-            let res = describe::describe(descript, command).await;
+            let res = describe::describe().await;
         },
         Bashfull::Recall {descript} => {
             check_login::check_login().await;
