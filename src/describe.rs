@@ -56,8 +56,7 @@ pub async fn describe() -> Result<(), Box<dyn std::error::Error>> {
 
     //let req = await response.json();
 
-    //println!("{}", serde_json::to_string(&req).unwrap_or("".to_owned()));
-    println!("{}", serde_json::to_string(&body).unwrap_or("".to_owned()));
+    println!("{}", &body.as_ref().unwrap()["message"].as_str().unwrap());
 
     // match response.status() {
     //     reqwest::StatusCode::OK => {
