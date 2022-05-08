@@ -11,6 +11,7 @@ mod describe;
 mod login;
 mod check_login;
 mod recall;
+mod invoke;
 
 
 // #[derive(Serialize, Deserialize, Debug)]
@@ -38,14 +39,20 @@ enum Bashfull {
     },
     #[structopt(name = "recall")]
     Recall {
-        #[structopt(short = "d", long = "description")]
+        #[structopt()]
         descript: String,
     },
     #[structopt(name = "login")]
     Login {
         #[structopt(default_value="https://bashfull-server.vercel.app/profile")]
         url: String
+    },
+    #[structopt(name = "invoke")]
+    Invoke {
+        #[structopt()]
+        descript: String,
     }
+
 }
 
 #[tokio::main]
@@ -58,6 +65,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Bashfull::Recall {descript} => {
             check_login::check_login().await;
             let res = recall::recall(descript).await;
+        },
+        Bashfull::Invoke {descript} => {
+            check_login::check_login().await;
+            let res = invoke::invoke(descript).await;
         },
         Bashfull::Login {url} => {
             let res = login::login().await;
