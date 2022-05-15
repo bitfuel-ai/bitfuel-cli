@@ -7,11 +7,11 @@ use std::path::Path;
 use serde_json;
 use std::collections::HashMap;
 
-mod describe;
+mod save;
 mod login;
 mod check_login;
-mod recall;
-mod invoke;
+mod get;
+mod run;
 
 
 // #[derive(Serialize, Deserialize, Debug)]
@@ -32,13 +32,13 @@ struct Req {
 enum Bashfull {
     /// Activate debug mode
     // short and long flags (-d, --debug) will be deduced from the field's name
-    #[structopt(name = "describe")]
-    Describe {
+    #[structopt(name = "save")]
+    Save {
         #[structopt(default_value="https://bashfull-server.vercel.app/profile")]
         url: String
     },
-    #[structopt(name = "recall")]
-    Recall {
+    #[structopt(name = "get")]
+    Get {
         #[structopt()]
         descript: String,
     },
@@ -47,8 +47,8 @@ enum Bashfull {
         #[structopt(default_value="https://bashfull-server.vercel.app/profile")]
         url: String
     },
-    #[structopt(name = "invoke")]
-    Invoke {
+    #[structopt(name = "run")]
+    Run {
         #[structopt()]
         descript: String,
     }
@@ -58,17 +58,17 @@ enum Bashfull {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     match Bashfull::from_args() {
-        Bashfull::Describe {url} => {
+        Bashfull::Save {url} => {
             check_login::check_login().await;
-            let res = describe::describe().await;
+            let res = save::save().await;
         },
-        Bashfull::Recall {descript} => {
+        Bashfull::Get {descript} => {
             check_login::check_login().await;
-            let res = recall::recall(descript).await;
+            let res = get::get(descript).await;
         },
-        Bashfull::Invoke {descript} => {
+        Bashfull::Run {descript} => {
             check_login::check_login().await;
-            let res = invoke::invoke(descript).await;
+            let res = run::run(descript).await;
         },
         Bashfull::Login {url} => {
             let res = login::login().await;

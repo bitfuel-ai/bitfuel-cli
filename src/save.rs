@@ -14,7 +14,18 @@ struct Req {
   body: Option<serde_json::Value>
 }
 
-pub async fn recall(_descript:String) -> Result<(), Box<dyn std::error::Error>> {
+pub async fn save() -> Result<(), Box<dyn std::error::Error>> {
+
+    let _command : String = Input::new()
+    .with_prompt("The command to remember")
+    .with_initial_text("")
+    .interact_text()?;
+
+    let _descript : String = Input::new()
+    .with_prompt("A description of the command")
+    .with_initial_text("")
+    .interact_text()?;
+
 
     let home = match env::var_os("HOME") {
         Some(v) => v.into_string().unwrap(),
@@ -28,13 +39,12 @@ pub async fn recall(_descript:String) -> Result<(), Box<dyn std::error::Error>> 
 
     let key = fs::read_to_string(api_key_file)?;
 
+    
     let client = reqwest::Client::new();
-
-    let url = "https://bashfull-server.vercel.app/api/recall".to_owned() + "?token=" + &key + "&prompt=" + &_descript;
     let response = client
-        .get(url)
+        .get("https://bashfull-server.vercel.app/api/describe".to_owned() + "?token=" + &key + "&descript=" + &_descript + "&command=" + &_command)
         .send().await?;
-    // println!("Success! {:?}", response);
+    //println!("Success! {:?}", response);
 
     let mut hm = HashMap::new();
     for (key, val) in response.headers().into_iter() {
@@ -46,16 +56,13 @@ pub async fn recall(_descript:String) -> Result<(), Box<dyn std::error::Error>> 
 
     //let req = await response.json();
 
-    println!("{}", &body.as_ref().unwrap()["command"].as_str().unwrap());
+    println!("{}", &body.as_ref().unwrap()["message"].as_str().unwrap());
 
-    //println!("{}", serde_json::to_string(&req).unwrap_or("".to_owned()));
-    //println!("{}", serde_json::to_string(&body).unwrap_or("".to_owned()));
-
-    // match req.status {
-    //     req::status::200 => {
+    // match response.status() {
+    //     reqwest::StatusCode::OK => {
     //         // on success, parse our JSON to an APIResponse
     //         match response.json::<APIResponse>().await {
-    //             Ok(parsed) => println!("Recalling command {:?}", parsed),
+    //             Ok(parsed) => println!("Success! {:?}", parsed),
     //             Err(_) => println!("Hm, the response didn't match the shape we expected."),
     //         };
     //     }

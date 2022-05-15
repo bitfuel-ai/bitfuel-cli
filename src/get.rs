@@ -6,12 +6,6 @@ use std::env;
 use std::path::Path;
 use serde_json;
 use std::collections::HashMap;
-use std::{thread, time::Duration};
-
-
-use std::process::{Command, Stdio};
-
-use execute::{Execute, shell};
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Req {
@@ -20,7 +14,7 @@ struct Req {
   body: Option<serde_json::Value>
 }
 
-pub async fn invoke(_descript:String) -> Result<(), Box<dyn std::error::Error>> {
+pub async fn get(_descript:String) -> Result<(), Box<dyn std::error::Error>> {
 
     let home = match env::var_os("HOME") {
         Some(v) => v.into_string().unwrap(),
@@ -48,25 +42,11 @@ pub async fn invoke(_descript:String) -> Result<(), Box<dyn std::error::Error>> 
     }
 
     let req = Req {status: response.status().as_u16(), body: response.json().await.ok(), headers: hm};
-    let mut body = req.body;
-
-
-    //println!("{}", &body.as_ref().unwrap()["command"].as_str().unwrap());
-    println!("Invoking command... {}", &body.as_ref().unwrap()["command"].as_str().unwrap());
-    println!("");
-
-    thread::sleep(Duration::from_millis(1500));
+    let body = req.body;
 
     //let req = await response.json();
-    let mut command = shell((&body.as_ref().unwrap()["command"].as_str().unwrap()));
 
-    command.stdout(Stdio::piped());
-
-    let output = command.execute_output().unwrap();
-
-    println!("{}", String::from_utf8(output.stdout).unwrap());
-
-    //println!("{}", &body.as_ref().unwrap()["command"].as_str().unwrap());
+    println!("{}", &body.as_ref().unwrap()["command"].as_str().unwrap());
 
     //println!("{}", serde_json::to_string(&req).unwrap_or("".to_owned()));
     //println!("{}", serde_json::to_string(&body).unwrap_or("".to_owned()));
