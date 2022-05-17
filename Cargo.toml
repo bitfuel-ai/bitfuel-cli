@@ -1,6 +1,6 @@
 [package]
-name = "bashfull"
-version = "0.1.4"
+name = "bitfuel"
+version = "0.1.0"
 edition = "2021"
 description = "never forget a bash command again"
 license = "MIT"
@@ -10,6 +10,8 @@ license = "MIT"
 [dependencies]
 structopt = { version = "0.3", default-features = false }
 reqwest = { version = "0.11", features = ["json", "cookies"] }
+#comment openssl to build locally
+#openssl = { version = "0.10", features = ["vendored"] }
 tokio = { version = "1", features = ["full"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
