@@ -34,5 +34,5 @@ brew install bitfuel
 
 `bitfuel get` - provide a description of the command you are looking for and retrieve it
 
-`bitfuel invoke` - provide a description of a command and automatically invoke it - use with caution.
+`bitfuel run` - provide a description of a command and automatically run it - use with caution.
 
