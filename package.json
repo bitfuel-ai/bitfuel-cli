@@ -1,0 +1,35 @@
+{
+  "name": "bitfuel",
+  "version": "1.0.0",
+  "description": "Never look up a command twice",
+  "main": "index.js",
+  "scripts": {
+    "test": "bitfuel login"
+  },
+  "bin": {
+    "bitfuel": "./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bitfuel-ai/bitfuel-cli.git"
+  },
+  "keywords": [
+    "memory",
+    "code",
+    "faster"
+  ],
+  "author": "bitfuel.dev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bitfuel-ai/bitfuel-cli/issues"
+  },
+  "homepage": "https://github.com/bitfuel-ai/bitfuel-cli#readme",
+  "dependencies": {
+    "chalk": "^5.0.1",
+    "commander": "^9.3.0",
+    "conf": "^10.1.2"
+  },
+  "devDependencies": {
+    "prettier": "2.6.2"
+  }
+}
