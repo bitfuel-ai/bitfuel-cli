@@ -4,6 +4,9 @@
 const { program } = require('commander');
 const login = require('./commands/login');
 const save = require('./commands/save.js');
+const get = require('./commands/get.js');
+
+
 
 program
     .command('login')
@@ -14,6 +17,11 @@ program
     .command('save')
     .description('Save a command to bitfuel.')
     .action(save)
+
+program
+    .command('get')
+    .description('Get a command from bitfuel.')
+    .action(get)
 
 program.parse();
 

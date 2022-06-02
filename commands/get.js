@@ -5,7 +5,7 @@ const axios = require('axios');
 
 prompt.start();
 
-async function save () {
+async function get () {
     let token = conf.get('token');
 
     if (!token) {
@@ -17,11 +17,8 @@ async function save () {
 
     var schema = {
         properties: {
-            command: {
-                description: 'Enter the command to save: '
-             },
            description: {
-              description: 'Enter the description of the command to save: '
+              description: 'Enter the description of the command to get: '
            }
         }
      };
@@ -36,17 +33,17 @@ async function save () {
 
             var reqResult = await axios({
                 method: "get",
-                url: "https://bitfuel.dev/api/save?token=" + token + "&command=" + result.command + "&descript=" + result.description 
+                url: "https://bitfuel.dev/api/get?token=" + token + "&prompt=" + result.description 
             });
             
             if (reqResult.status == 200) {
                 console.log(
-                    chalk.green.bold('Command saved successfully.')
+                    chalk.green.bold(reqResult.data.result[0].command)
                 );
             }
             else {
                 console.log(
-                    chalk.red.bold('Command save failed.')
+                    chalk.red.bold('Get command failed.')
                 );
             }
         }
@@ -54,4 +51,4 @@ async function save () {
       });
 }
 
-module.exports = save;
+module.exports = get;
