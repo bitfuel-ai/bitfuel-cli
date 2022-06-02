@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/bitfuel-ai/bitfuel-cli#readme",
   "dependencies": {
+    "async": "^3.2.3",
     "axios": "^0.27.2",
     "chalk": "^4.1.2",
     "commander": "^9.3.0",

@@ -25,7 +25,7 @@ function login () {
         
         if (err) { // || //we could check an api route here
             console.log(
-                chalk.green.bold('There was an error logging in.')
+                chalk.red.bold('There was an error logging in.')
             );
         } else {
             conf.set('token', result.token);
