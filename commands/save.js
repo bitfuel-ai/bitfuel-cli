@@ -3,6 +3,8 @@ const chalk = require('chalk');
 const prompt = require('prompt');
 const axios = require('axios');
 
+prompt.message = '';
+prompt.delimiter = chalk.green.bold(':');
 prompt.start();
 
 async function save () {

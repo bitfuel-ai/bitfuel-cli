@@ -2,6 +2,8 @@ const conf = new (require('conf'))()
 const chalk = require('chalk');
 const prompt = require('prompt');
 
+
+prompt.message = '';
 prompt.start();
 
 function login () {
@@ -15,7 +17,8 @@ function login () {
         properties: {
            token: {
               description: 'Enter your token',
-              hidden: true
+              hidden: true,
+              replace: '*'
            }
         }
      };

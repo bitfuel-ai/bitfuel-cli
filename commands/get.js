@@ -2,7 +2,11 @@ const conf = new (require('conf'))()
 const chalk = require('chalk');
 const prompt = require('prompt');
 const axios = require('axios');
+var stdin = process.stdin;
+var keypress = require('keypress');
 
+prompt.message = '';
+prompt.delimiter = chalk.green.bold(':');
 prompt.start();
 
 async function get () {
@@ -18,7 +22,7 @@ async function get () {
     var schema = {
         properties: {
            description: {
-              description: 'Enter the description of the command to get: '
+              description: chalk.green.bold('Enter the description of the command to get')
            }
         }
      };
@@ -37,11 +41,46 @@ async function get () {
             });
             
             if (reqResult.status == 200) {
+
                 console.log(
-                    chalk.green.bold(reqResult.data.result[0].command)
-                );
+                    chalk.green.bold('Use arrow keys to cycle commands - press enter to finish.')
+                )
+
+                var commands = ["command1", "command2", "command3"];
+                var command_position = 0;
+                process.stdout.write(chalk.green.bold(commands[command_position]));
+
+                stdin.setRawMode( true );
+                stdin.resume();
+                stdin.setEncoding( 'utf8' );
+                stdin.on('keypress', function (ch, key) {
+                    if (key && key.name == 'left') {
+                        if (command_position > 0) {
+                            command_position--;
+                            process.stdout.clearLine(0);
+                            process.stdout.cursorTo(0);
+                            process.stdout.write(chalk.green.bold(commands[command_position]));
+                        }
+                        
+                    }
+
+                    if (key && key.name == 'right') {
+                        if (command_position < (commands.length - 1)) {
+                            command_position++;
+                            process.stdout.clearLine(0);
+                            process.stdout.cursorTo(0);
+                            process.stdout.write(chalk.green.bold(commands[command_position]));
+                        }
+                    }
+
+                    if (key && key.name == 'return') {
+                        process.stdout.write("\n");
+                        process.stdin.pause();
+                    }
+                });
             }
             else {
+                
                 console.log(
                     chalk.red.bold('Get command failed.')
                 );
