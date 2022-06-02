@@ -1,5 +1,6 @@
 {
   "name": "bitfuel",
+  "type": "commonjs",
   "version": "1.0.0",
   "description": "Never look up a command twice",
   "main": "index.js",
@@ -25,9 +26,13 @@
   },
   "homepage": "https://github.com/bitfuel-ai/bitfuel-cli#readme",
   "dependencies": {
-    "chalk": "^5.0.1",
+    "axios": "^0.27.2",
+    "chalk": "^4.1.2",
     "commander": "^9.3.0",
-    "conf": "^10.1.2"
+    "conf": "^10.1.2",
+    "esbuild": "^0.14.42",
+    "n": "^8.2.0",
+    "prompt": "^1.3.0"
   },
   "devDependencies": {
     "prettier": "2.6.2"
