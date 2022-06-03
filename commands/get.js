@@ -37,18 +37,19 @@ async function get () {
 
             var reqResult = await axios({
                 method: "get",
-                url: "https://bitfuel.dev/api/get?token=" + token + "&prompt=" + result.description 
+                url: "https://bitfuel.dev/api/get?token=" + token + "&prompt=" + result.description + "&size=20" + "&page=1" 
             });
             
             if (reqResult.status == 200) {
+
+                commands = reqResult.data.result;
 
                 console.log(
                     chalk.green.bold('Use arrow keys to cycle commands - press enter to finish.')
                 )
 
-                var commands = ["command1", "command2", "command3"];
                 var command_position = 0;
-                process.stdout.write(chalk.green.bold(commands[command_position]));
+                process.stdout.write(chalk.green.bold(commands[command_position].command));
 
                 stdin.setRawMode( true );
                 stdin.resume();
@@ -59,7 +60,7 @@ async function get () {
                             command_position--;
                             process.stdout.clearLine(0);
                             process.stdout.cursorTo(0);
-                            process.stdout.write(chalk.green.bold(commands[command_position]));
+                            process.stdout.write(chalk.green.bold(commands[command_position].command));
                         }
                         
                     }
@@ -69,7 +70,7 @@ async function get () {
                             command_position++;
                             process.stdout.clearLine(0);
                             process.stdout.cursorTo(0);
-                            process.stdout.write(chalk.green.bold(commands[command_position]));
+                            process.stdout.write(chalk.green.bold(commands[command_position].command));
                         }
                     }
 
