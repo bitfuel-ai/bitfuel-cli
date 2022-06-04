@@ -1,6 +1,7 @@
 const conf = new (require('conf'))()
 const chalk = require('chalk');
 const prompt = require('prompt');
+const getToken = require('./getToken');
 const axios = require('axios');
 
 prompt.message = '';
@@ -8,7 +9,7 @@ prompt.delimiter = chalk.green.bold(':');
 prompt.start();
 
 async function save () {
-    let token = conf.get('token');
+    let token = getToken();
 
     if (!token) {
         console.log(
