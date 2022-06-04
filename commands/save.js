@@ -20,10 +20,10 @@ async function save () {
     var schema = {
         properties: {
             command: {
-                description: 'Enter the command to save: '
+                description: chalk.green.bold('Enter the command to save')
              },
            description: {
-              description: 'Enter the description of the command to save: '
+              description: chalk.green.bold('Enter the description of the command to save')
            }
         }
      };
@@ -31,9 +31,8 @@ async function save () {
     prompt.get(schema, async function (err, result) {
         
         if (err) { // || //we could check an api route here
-            console.log(
-                chalk.red.bold('There was an error fetching your description.')
-            );
+            process.stdout.write("\n");
+            return;
         } else {
 
             var reqResult = await axios({

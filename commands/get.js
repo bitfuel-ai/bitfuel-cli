@@ -26,10 +26,10 @@ async function get () {
            }
         }
      };
-    //prompt.get([{"token": "Your token"}], function (err, result) {
+
     prompt.get(schema, async function (err, result) {
         
-        if (err) { // || //we could check an api route here
+        if (err) { // || // could check an api route here
             console.log(
                 chalk.red.bold('There was an error fetching your description.')
             );
@@ -55,7 +55,7 @@ async function get () {
                 stdin.resume();
                 stdin.setEncoding( 'utf8' );
                 stdin.on('keypress', function (ch, key) {
-                    if (key && key.name == 'left') {
+                    if (key && key.name == 'down') {
                         if (command_position > 0) {
                             command_position--;
                             process.stdout.clearLine(0);
@@ -65,7 +65,7 @@ async function get () {
                         
                     }
 
-                    if (key && key.name == 'right') {
+                    if (key && key.name == 'up') {
                         if (command_position < (commands.length - 1)) {
                             command_position++;
                             process.stdout.clearLine(0);
@@ -74,7 +74,7 @@ async function get () {
                         }
                     }
 
-                    if (key && key.name == 'return') {
+                    if ((key && key.name == 'return') || (key && key.name == 'c' && key.ctrl)) {
                         process.stdout.write("\n");
                         process.stdin.pause();
                     }
