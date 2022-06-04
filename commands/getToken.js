@@ -1,15 +1,14 @@
-const fs = require('fs');
-const chalk = require('chalk');
-const homedir = require('os').homedir();
+const fs = require("fs");
+const chalk = require("chalk");
+const homedir = require("os").homedir();
 const TOKEN_FULL_PATH = homedir + "/.bitfuel/key.txt";
 
 const getToken = () => {
-
     var cachedToken;
     if (cachedToken) return cachedToken;
     var token;
     try {
-        token = fs.readFileSync(TOKEN_FULL_PATH, 'utf8');
+        token = fs.readFileSync(TOKEN_FULL_PATH, "utf8");
     } catch (err) {
         console.log(err);
     }
@@ -20,6 +19,6 @@ const getToken = () => {
     }
     cachedToken = token;
     return token;
-}
+};
 
 module.exports = getToken;
