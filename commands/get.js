@@ -37,7 +37,7 @@ async function get () {
 
             var reqResult = await axios({
                 method: "get",
-                url: "https://bitfuel.dev/api/get?token=" + token + "&prompt=" + result.description + "&size=20" + "&page=1" 
+                url: "https://bitfuel.dev/api/get?token=" + token + "&prompt=" + result.description + "&size=20" + "&page=1" + "&codetype=command"
             });
             
             if (reqResult.status == 200) {

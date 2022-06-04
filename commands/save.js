@@ -37,7 +37,7 @@ async function save () {
 
             var reqResult = await axios({
                 method: "get",
-                url: "https://bitfuel.dev/api/save?token=" + token + "&command=" + result.command + "&descript=" + result.description 
+                url: "https://bitfuel.dev/api/save?token=" + token + "&command=" + result.command + "&descript=" + result.description + "&codetype=command"
             });
             
             if (reqResult.status == 200) {
