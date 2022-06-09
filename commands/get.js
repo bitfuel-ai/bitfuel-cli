@@ -12,11 +12,11 @@ prompt.start();
 
 async function get() {
     let token = getToken();
-    console.log(token, typeof token);
 
     if (!token || !token.length) {
         console.log(chalk.red.bold("Not logged in --> run bitfuel login."));
         return;
+    } else {
     }
 
     var schema = {

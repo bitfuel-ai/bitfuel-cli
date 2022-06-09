@@ -10,11 +10,11 @@ const getToken = () => {
     try {
         token = fs.readFileSync(TOKEN_FULL_PATH, "utf8");
     } catch (err) {
-        console.log(err);
+        // console.log(err);
     }
 
     if (!token || !token.length) {
-        console.log(chalk.red("Token Not Found"));
+        console.log(chalk.red.bold("Token Not Found"));
         return false;
     }
     cachedToken = token;
