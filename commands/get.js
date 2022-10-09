@@ -5,6 +5,7 @@ const axios = require("axios");
 const getToken = require("./getToken");
 var stdin = process.stdin;
 var keypress = require("keypress");
+const { exec } = require("child_process");
 
 prompt.message = "";
 prompt.delimiter = chalk.green.bold(":");
@@ -12,7 +13,6 @@ prompt.start();
 
 async function get() {
     let token = getToken();
-    console.log(token, typeof token);
 
     if (!token || !token.length) {
         console.log(chalk.red.bold("Not logged in --> run bitfuel login."));
@@ -48,11 +48,11 @@ async function get() {
                 commands = reqResult.data.result;
 
                 console.log(
-                    chalk.green.bold("Use arrow keys to cycle commands - press enter to finish.")
+                    chalk.green.bold("Use arrow keys to cycle commands - press enter to run.")
                 );
 
                 var command_position = 0;
-                process.stdout.write(chalk.green.bold(commands[command_position].command));
+                process.stdout.write(chalk.yellow.bold(commands[command_position].command));
 
                 stdin.setRawMode(true);
                 stdin.resume();
@@ -64,7 +64,7 @@ async function get() {
                             process.stdout.clearLine(0);
                             process.stdout.cursorTo(0);
                             process.stdout.write(
-                                chalk.green.bold(commands[command_position].command)
+                                chalk.yellow.bold(commands[command_position].command)
                             );
                         }
                     }
@@ -75,13 +75,24 @@ async function get() {
                             process.stdout.clearLine(0);
                             process.stdout.cursorTo(0);
                             process.stdout.write(
-                                chalk.green.bold(commands[command_position].command)
+                                chalk.yellow.bold(commands[command_position].command)
                             );
                         }
                     }
 
                     if ((key && key.name == "return") || (key && key.name == "c" && key.ctrl)) {
                         process.stdout.write("\n");
+                        exec(commands[command_position].command, (error, stdout, stderr) => {
+                            if (error) {
+                                console.log(error.message);
+                                return;
+                            }
+                            if (stderr) {
+                                console.log(stderr);
+                                return;
+                            }
+                            console.log(stdout);
+                        });
                         process.stdin.pause();
                     }
                 });
