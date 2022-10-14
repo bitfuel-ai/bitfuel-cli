@@ -33,23 +33,42 @@ async function save() {
             process.stdout.write("\n");
             return;
         } else {
-            var reqResult = await axios({
-                method: "get",
-                url:
-                    "https://bitfuel.dev/api/save?token=" +
-                    token +
-                    "&command=" +
-                    result.command +
-                    "&descript=" +
-                    result.description +
-                    "&codetype=command"
-            });
+            var reqResult;
 
-            if (reqResult.status == 200) {
-                console.log(chalk.green.bold("Command saved successfully."));
-            } else {
-                console.log(chalk.red.bold("Command save failed."));
+            try {
+                await axios({
+                    method: "get",
+                    url:
+                        "https://bitfuel.dev/api/save?token=" +
+                        token +
+                        "&command=" +
+                        result.command +
+                        "&descript=" +
+                        result.description +
+                        "&codetype=command"
+                });
+            } catch (e) {
+                if (e.response.status == 400) {
+                    console.log(
+                        chalk.red.bold(
+                            "Request failed because no token was sent. Did you run 'bitfuel login?'"
+                        )
+                    );
+                    return;
+                } else if (e.response.status == 401) {
+                    console.log(
+                        chalk.red.bold(
+                            "Token was invalid. Did you delete this token? Generate a new one at https://bitfuel.com and run 'bitfuel login' to fix."
+                        )
+                    );
+                    return;
+                } else {
+                    console.log(chalk.red.bold(e.response.data.error));
+                    return;
+                }
             }
+
+            console.log(chalk.green.bold("Command saved successfully."));
         }
     });
 }

@@ -14,7 +14,7 @@ const getToken = () => {
     }
 
     if (!token || !token.length) {
-        console.log(chalk.red.bold("Token Not Found"));
+        console.log(chalk.red.bold("Token Not Found, run 'bitfuel login'"));
         return false;
     }
     cachedToken = token;
