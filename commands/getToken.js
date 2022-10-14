@@ -1,7 +1,7 @@
 const fs = require("fs");
 const chalk = require("chalk");
 const homedir = require("os").homedir();
-const TOKEN_FULL_PATH = homedir + "/.bitfuel/key.txt";
+const TOKEN_FULL_PATH = homedir + "/.config/bitfuel/key.txt";
 
 const getToken = () => {
     var cachedToken;

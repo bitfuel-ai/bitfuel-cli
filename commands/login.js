@@ -4,8 +4,9 @@ const getToken = require("./getToken");
 const prompt = require("prompt");
 const fs = require("fs");
 const homedir = require("os").homedir();
-const TOKEN_PATH = homedir + "/.bitfuel";
-const TOKEN_FULL_PATH = homedir + "/.bitfuel/key.txt";
+const CONFIG_PATH = homedir + "/.config";
+const BITFUEL_PATH = homedir + "/.config/bitfuel";
+const TOKEN_FULL_PATH = homedir + "/.config/bitfuel/key.txt";
 
 prompt.message = "";
 prompt.start();
@@ -32,14 +33,21 @@ function login() {
             );
         } else {
             try {
-                if (!fs.existsSync(TOKEN_PATH)) {
-                    fs.mkdirSync(TOKEN_PATH);
+                if (!fs.existsSync(CONFIG_PATH)) {
+                    fs.mkdirSync(CONFIG_PATH);
+                }
+
+                if (!fs.existsSync(BITFUEL_PATH)) {
+                    fs.mkdirSync(BITFUEL_PATH);
                 }
 
                 fs.writeFileSync(TOKEN_FULL_PATH, result.token);
                 console.log(chalk.green.bold("Login successful."));
             } catch (err) {
-                chalk.red.bold("There was an error logging in. Could not write token to file.");
+                console.log(
+                    chalk.red.bold("There was an error logging in. Could not write token to file.")
+                );
+                console.log(err);
             }
         }
     });
