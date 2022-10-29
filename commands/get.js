@@ -15,14 +15,14 @@ async function get() {
     let token = getToken();
 
     if (!token || !token.length) {
-        console.log(chalk.red.bold("Not logged in --> run bitfuel login."));
+        // console.log(chalk.red.bold("Not logged in --> run bitfuel login."));
         return;
     }
 
     var schema = {
         properties: {
             description: {
-                description: chalk.green.bold("Enter the description of the command to get")
+                description: "Enter the description of the command to get"
             }
         }
     };
@@ -30,7 +30,7 @@ async function get() {
     prompt.get(schema, async function (err, result) {
         if (err) {
             // || // could check an api route here
-            console.log(chalk.red.bold("There was an error fetching your description."));
+            console.log("There was an error fetching your description.");
         } else {
             var reqResult;
             try {
@@ -49,29 +49,25 @@ async function get() {
                 console.log(e.response.status, e.response.data.error);
                 if (e.response.status == 400) {
                     console.log(
-                        chalk.red.bold(
-                            "Request failed because no token was sent. Did you run 'bitfuel login?'"
-                        )
+                        "Request failed because no token was sent. Did you run 'bitfuel login?'"
                     );
                     return;
                 } else if (e.response.status == 401) {
                     console.log(
-                        chalk.red.bold(
-                            "Token was invalid. Did you delete this token? Generate a new one at https://bitfuel.com and run 'bitfuel login' to fix."
-                        )
+                        "Token was invalid. Did you delete this token? Generate a new one at https://bitfuel.com and run 'bitfuel login' to fix."
                     );
                     return;
                 } else {
-                    console.log(chalk.red.bold(e.response.data.error));
+                    console.log(e.response.data.error);
                     return;
                 }
             }
             commands = reqResult.data.result;
 
-            console.log(chalk.green.bold("Use arrow keys to cycle commands - press enter to run."));
+            console.log("Use arrow keys to cycle commands -> press enter to run.");
 
             var command_position = 0;
-            process.stdout.write(chalk.yellow.bold(commands[command_position].command));
+            process.stdout.write(commands[command_position].command);
 
             stdin.setRawMode(true);
             stdin.resume();
@@ -82,7 +78,7 @@ async function get() {
                         command_position--;
                         process.stdout.clearLine(0);
                         process.stdout.cursorTo(0);
-                        process.stdout.write(chalk.yellow.bold(commands[command_position].command));
+                        process.stdout.write(commands[command_position].command);
                     }
                 }
 
@@ -91,7 +87,7 @@ async function get() {
                         command_position++;
                         process.stdout.clearLine(0);
                         process.stdout.cursorTo(0);
-                        process.stdout.write(chalk.yellow.bold(commands[command_position].command));
+                        process.stdout.write(commands[command_position].command);
                     }
                 }
 

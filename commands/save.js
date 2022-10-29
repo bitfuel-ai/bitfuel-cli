@@ -12,17 +12,17 @@ async function save() {
     let token = getToken();
 
     if (!token) {
-        console.log(chalk.red.bold("Not logged in --> run bitfuel login."));
+        // console.log(chalk.red.bold("Not logged in --> run bitfuel login."));
         return;
     }
 
     var schema = {
         properties: {
             command: {
-                description: chalk.green.bold("Enter the command to save")
+                description: "Enter the command to save"
             },
             description: {
-                description: chalk.green.bold("Enter the description of the command to save")
+                description: "Enter the description of the command to save"
             }
         }
     };
@@ -50,25 +50,22 @@ async function save() {
             } catch (e) {
                 if (e.response.status == 400) {
                     console.log(
-                        chalk.red.bold(
-                            "Request failed because no token was sent. Did you run 'bitfuel login?'"
-                        )
+                        "Request failed because no token was sent. Did you run 'bitfuel login?'"
                     );
                     return;
                 } else if (e.response.status == 401) {
                     console.log(
-                        chalk.red.bold(
-                            "Token was invalid. Did you delete this token? Generate a new one at https://bitfuel.com and run 'bitfuel login' to fix."
-                        )
+                        "Token was invalid. Did you delete this token? Generate a new one at https://bitfuel.com and run 'bitfuel login' to fix."
                     );
+
                     return;
                 } else {
-                    console.log(chalk.red.bold(e.response.data.error));
+                    console.log(e.response.data.error);
                     return;
                 }
             }
 
-            console.log(chalk.green.bold("Command saved successfully."));
+            console.log("Command saved successfully.");
         }
     });
 }

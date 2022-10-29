@@ -12,12 +12,12 @@ prompt.message = "";
 prompt.start();
 
 function login() {
-    console.log(chalk.green.bold("Please visit bitfuel.dev and paste your api token here."));
+    console.log("Please visit bitfuel.dev and paste your api token here.");
 
     var schema = {
         properties: {
             token: {
-                description: chalk.green.bold("Enter your token"),
+                description: "Enter your token",
                 hidden: true,
                 replace: "*"
             }
