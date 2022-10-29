@@ -2,9 +2,9 @@
 
 _Never look up a command twice_
 
-## Manifesto
+bitfuel.dev
 
-If you understand the essence of a bash command to the extent that you can discuss it in plain english with others, you should not have to search for it again on the web. When you do, your focus is broken and you've been pulled away from the task at hand and into the netherworld of SEO.
+## Manifesto
 
 BitFuel is a CLI tool that allows you to store bash commands in the cloud where you can retrieve them in plain english, wherever you might be coding.
 
@@ -20,12 +20,14 @@ npm install bitfuel
 
 ## Usage
 
-`bitfuel login` - visit your profile page on our website and retrieve a token unique to your account.
+`bitfuel login` - visit your settings page on our website to generate a token unique to your account.
 
 `bitfuel save` - save your command with a description of what the command means to you.
 
 `bitfuel get` - provide a description of the command you are looking for and retrieve it
 
-## Homepage
+## VSCODE extension
 
-bitfuel.dev
+We also provide a VSCode extension to save and retrieve your code snippets with natural language without leaving your text editor.
+
+https://github.com/bitfuel-ai/bitfuel-vscode
