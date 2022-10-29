@@ -1,7 +1,7 @@
 {
     "name": "bitfuel",
     "type": "commonjs",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Never look up a command twice",
     "main": "index.js",
     "scripts": {
